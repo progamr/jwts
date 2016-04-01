@@ -1,0 +1,29 @@
+{
+  "name": "jwts",
+  "version": "1.0.0",
+  "description": "jwts using angular and nodejs",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/progamr/jwts.git"
+  },
+  "keywords": [
+    "jwts",
+    "nodejs",
+    "angularjs"
+  ],
+  "author": "Amr Mohamed <prog.amr2014@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/progamr/jwts/issues"
+  },
+  "homepage": "https://github.com/progamr/jwts#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.10"
+  }
+}

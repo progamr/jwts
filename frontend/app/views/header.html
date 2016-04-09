@@ -1,0 +1,27 @@
+<div ng-controller="HeaderCtrl" class="header" ng-cloak>
+  <div class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand" href="#/">jwts</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="js-navbar-collapse">
+
+        <ul class="nav navbar-nav">
+          <li ui-sref-active="active"><a ui-sref="main"> Home</a></li>
+          <li ng-hide="isAuthenticated()" ui-sref-active="active"><a ui-sref="login">Login</a></li>
+          <li ng-show="isAuthenticated()" ui-sref-active="active"><a ui-sref="logout">Logout</a></li>
+          <li ui-sref-active="active"><a ui-sref="jobs">Jobs</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

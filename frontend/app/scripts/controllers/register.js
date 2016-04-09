@@ -5,24 +5,19 @@
  * @name jwtsApp.controller:RegisterCtrl
  * @description
  * # RegisterCtrl
- * register controller will handle sending
- * the http request to the back-end
+ * responsible for calling the register function
+ * inside auth service to register the user and
+ * display an alert success message to welcome the user.
  */
-angular.module('jwtsApp')
-  .controller('RegisterCtrl', function ($scope, $http, alert) {
+angular.module('jwtsApp').controller('RegisterCtrl', function ($scope, alert, auth) {
     $scope.submit = function () {
-      var url = 'http://localhost:3000/register';
-      var user = {
-        email : $scope.email,
-        password : $scope.password
-      };
-      $http.post(url, user)
+      auth.register($scope.email, $scope.password)
         .success(function (response) {
           console.log(response);
-          alert('success', 'Ok', 'you are now registered');
+          alert('success', 'account created', 'welcome' + response.user.email + '!');
         })
         .error(function (error) {
-            alert('warning', 'Whoops', 'could not register');
+          alert('warning', 'Something went wrong :(', error.message);
         });
-    }
+    };
   });

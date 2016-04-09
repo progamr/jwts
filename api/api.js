@@ -22,19 +22,88 @@ app.use(function (req, res, next) {
     next();
 });
 
+/**-------------------
+ * user register route
+ -------------------*/
 app.post('/register', function (req, res) {
     var user = req.body;
-    var newUser = new User.model({
+    var newUser = new User({
         email : user.email,
         password : user.password
     });
     newUser.save(function (err) {
-        res.status(200).send(newUser.toJSON());
-        console.log(newUser);
+        if (err) return res.status(500, {message : 'coudn\'t save user'});
+        createSendToken(newUser, res);
     });
 });
 
+
+app.post('/login', function (req, res) {
+
+    req.user = req.body;
+    var searchUser = {
+        email:req.user.email
+    };
+    User.findOne(searchUser, function (err, foundUser) {
+        if(err) throw err;
+        if (!foundUser)  return res.status(401).send({message : 'wrong email/password..'});
+        foundUser.comparePasswords(req.user.password, function (err, isMatch) {
+            if (!isMatch)
+                return res.status(401).send({message : 'wrong email/password....'});
+            createSendToken(foundUser, res);
+        });
+    });
+});
+
+/**--------------------------------
+ * jobs route to get a list of jobs (authenticated)
+ --------------------------------*/
+app.get('/jobs', function (req, res) {
+
+    var jobs = [
+        'super Hero',
+        'Programmer',
+        'train Driver'
+    ];
+
+    /**-------------------------------------------------------
+     * check for authorization in the request headers
+     * ( will be valid only if we have an authorization token )
+     * if Not exists response with 401 not authorized else return jobs
+     * and if authorization exists get the token from the authorization
+     * header it's form is['Bearer ' + token] .
+     --------------------------------------------------------*/
+    if(!req.headers.authorization){
+        return res.status(401).send({
+            message: 'you are not authorized!'
+        });
+    }
+
+    var token = req.headers.authorization.split(' ')[1];
+    var payload = jwt.decode(token, 'shhhh..');
+    if(!payload.sub)
+        res.status(401).send({
+            message : 'Authorization failed'
+        });
+    res.json(jobs);
+
+});
 mongoose.connect('mongodb://localhost/psjwt')
 var server = app.listen(3000, function () {
     console.log('server is running on port ' + server.address().port);
 });
+
+/**
+ * custom functions
+ */
+
+function createSendToken (user, res) {
+    var payload = {
+        sub : user.id,
+    }
+    var token = jwt.encode(payload, 'shhhh..');
+    res.status(200).send({
+        user : user.toJSON(),
+        token : token
+    });
+};

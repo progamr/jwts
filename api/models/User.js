@@ -1,7 +1,7 @@
 // user model
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
-var userSchema = mongoose.Schema({
+var userSchema = new mongoose.Schema({
   email : String,
   password : String
 });
@@ -14,12 +14,26 @@ userSchema.methods.toJSON = function () {
   var user = this.toObject();
   delete user.password;
   return user;
-}
-exports.model = mongoose.model('User', userSchema);
+};
+
+userSchema.methods.comparePasswords = function (password, callback) {
+  var currentPassword = this.password;
+
+  bcrypt.genSalt(10, function (err, salt) {
+    // if there is error we return and pass it
+    if(err) throw err;
+    bcrypt.hash(currentPassword ,salt, null, function (err, hash) {
+      // if there is error we return and pass it
+      if(err) throw err;
+      currentPassword = hash;
+      bcrypt.compare(password, currentPassword, callback);
+    });
+  });
+};
 
 /**-----------------------------------
  * add our middleware By plugin to our
- * user schema and modify oyr model
+ * user schema and modify our model
  -----------------------------------*/
 userSchema.pre('save', function (next) {
   var user = this;
@@ -40,3 +54,5 @@ userSchema.pre('save', function (next) {
   });
   next();
 });
+
+module.exports = mongoose.model('User', userSchema);

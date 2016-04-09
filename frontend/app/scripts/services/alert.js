@@ -5,7 +5,7 @@
  * @name jwtsApp.alert
  * @description
  * # alert
- * Service in the jwtsApp.
+ * responsible for handling alerting functionality in the application.
  */
 angular.module('jwtsApp')
   .service('alert', function ($rootScope, $timeout) {
@@ -20,7 +20,7 @@ angular.module('jwtsApp')
         };
         $timeout(function () {
           $rootScope.alert.show = false;
-        }, timeout || 2000);
+        }, timeout || 3000);
         $timeout.cancel(alertTimeout);
       };
   });

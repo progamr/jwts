@@ -37,7 +37,9 @@ app.post('/register', function (req, res) {
     });
 });
 
-
+/**
+ * user login route
+ */
 app.post('/login', function (req, res) {
 
     req.user = req.body;
@@ -96,7 +98,12 @@ var server = app.listen(3000, function () {
 /**
  * custom functions
  */
-
+/**
+ * responsible for creating and sending the jwt in
+ * both Login and register.
+ * @param user
+ * @param res
+ */
 function createSendToken (user, res) {
     var payload = {
         sub : user.id,
